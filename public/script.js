@@ -7,8 +7,7 @@ let isPlaying = false; // Tracks if audio music is currently playing
 let isAutoplay = true; // Controls if the next audio song plays automatically
 let activeView = 'audio'; // Tracks the active view: 'audio' or 'video'
 
-let currentLyrics = []; // Stores the fetched lyrics lines for the current song
-let currentLyricLineIndex = -1; // Index of the currently highlighted lyric line
+// No currentLyrics or currentLyricLineIndex as lyrics feature is removed
 
 // --- DOM Element References ---
 const audio = document.getElementById('audio-source'); // The HTML <audio> element
@@ -35,8 +34,7 @@ const videoPlaylistEl = document.getElementById('video-playlist');
 const youtubePlayerContainer = document.getElementById('youtube-player-container');
 const videoInfoEl = document.getElementById('video-info');
 
-// --- Lyrics Elements ---
-const lyricsDisplayEl = document.getElementById('lyrics-display');
+// No lyricsDisplayEl as lyrics feature is removed
 
 // --- Gemini Feature Modal Elements ---
 const artistInfoBtn = document.getElementById('artist-info-btn'); // Button to get artist insights
@@ -92,8 +90,6 @@ function showVideoPlayer() {
     } else {
         loadVideo(currentVideoIndex); // Load current video if playlist exists
     }
-    // Clear lyrics when switching to video view
-    displayLyrics([]);
 }
 
 
@@ -122,7 +118,6 @@ async function fetchAudioPlaylist() {
         songTitleEl.textContent = 'Error loading playlist';
         artistNameEl.textContent = 'Please try again later';
         albumArtEl.src = 'https://placehold.co/600x600/1f2937/ffffff?text=Error';
-        displayLyricsError('Failed to load playlist.');
     }
 }
 
@@ -141,20 +136,13 @@ function loadSong(index) {
     artistNameEl.textContent = song.artist;
     albumArtEl.src = song.albumArt || 'https://placehold.co/600x600/1f2937/ffffff?text=Music';
     highlightAudioPlaylist(index);
-    
-    // --- Fetch Lyrics for the new song ---
-    if (song.spotifyTrackId) {
-        fetchLyrics(song.spotifyTrackId);
-    } else {
-        displayLyricsError('No Spotify ID for this track.');
-    }
 }
 
 /**
  * Plays the current audio song.
  */
 function playSong() {
-    audio.play();
+    audio.play().catch(e => console.error("Error playing audio:", e));
     isPlaying = true;
     playPauseIcon.classList.remove('fa-play');
     playPauseIcon.classList.add('fa-pause');
@@ -209,11 +197,13 @@ function updateProgressBar() {
         if (durationEl.textContent === '0:00' || isNaN(audio.duration)) {
              durationEl.textContent = formatTime(audio.duration);
         }
-        syncLyrics(); // Synchronize lyrics with playback
+        // Update the custom CSS property for the progress bar fill
+        progressBar.style.setProperty('--track-fill', `${progressBar.value}%`);
     } else {
         progressBar.value = 0;
         currentTimeEl.textContent = '0:00';
         durationEl.textContent = '0:00';
+        progressBar.style.setProperty('--track-fill', '0%');
     }
 }
 
@@ -230,6 +220,8 @@ function setProgress(event) {
  */
 function setVolume(event) {
     audio.volume = event.target.value;
+    // Update the custom CSS property for the volume slider fill
+    volumeSlider.style.setProperty('--track-fill', `${volumeSlider.value * 100}%`);
 }
 
 /**
@@ -265,110 +257,6 @@ function highlightAudioPlaylist(index) {
     });
 }
 
-// --- Lyrics Functions ---
-
-/**
- * Fetches lyrics for a given Spotify track ID from the backend.
- * @param {string} trackId - The Spotify track ID.
- */
-async function fetchLyrics(trackId) {
-    lyricsDisplayEl.innerHTML = '<p class="text-center text-gray-400">Loading lyrics...</p>'; // Show loading message
-    currentLyrics = []; // Clear previous lyrics
-    currentLyricLineIndex = -1; // Reset active line index
-
-    try {
-        const response = await fetch(`/api/lyrics/${trackId}`);
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        
-        if (data.lyrics && data.lyrics.length > 0) {
-            currentLyrics = data.lyrics;
-            displayLyrics(currentLyrics);
-        } else {
-            displayLyricsError('Lyrics not found for this track.');
-        }
-    } catch (error) {
-        console.error('Failed to fetch lyrics:', error);
-        displayLyricsError(`Error: ${error.message}`);
-    }
-}
-
-/**
- * Displays lyrics in the UI.
- * @param {Array<Object>} lyricsLines - An array of lyric line objects.
- */
-function displayLyrics(lyricsLines) {
-    lyricsDisplayEl.innerHTML = ''; // Clear existing lyrics
-    if (lyricsLines.length === 0) {
-        lyricsDisplayEl.innerHTML = '<p class="text-center text-gray-500">No lyrics available.</p>';
-        return;
-    }
-    lyricsLines.forEach((line, index) => {
-        const p = document.createElement('p');
-        p.textContent = line.words;
-        p.dataset.startTime = line.startTimeMs; // Store start time for synchronization
-        p.id = `lyric-line-${index}`; // Add an ID for easy access
-        lyricsDisplayEl.appendChild(p);
-    });
-    currentLyricLineIndex = -1; // Reset after building
-}
-
-/**
- * Displays an error message in the lyrics section.
- * @param {string} message - The error message to display.
- */
-function displayLyricsError(message) {
-    lyricsDisplayEl.innerHTML = `<p class="text-center text-red-400">${message}</p>`;
-    currentLyrics = [];
-    currentLyricLineIndex = -1;
-}
-
-/**
- * Synchronizes the lyrics display with the current audio playback time.
- */
-function syncLyrics() {
-    if (currentLyrics.length === 0 || !isPlaying) {
-        return; // No lyrics to sync or not playing
-    }
-
-    const currentTimeMs = audio.currentTime * 1000; // Convert to milliseconds
-
-    // Find the current lyric line
-    let newLyricLineIndex = -1;
-    for (let i = 0; i < currentLyrics.length; i++) {
-        const lineStartTime = parseInt(currentLyrics[i].startTimeMs);
-        const nextLineStartTime = (i + 1 < currentLyrics.length) ? parseInt(currentLyrics[i+1].startTimeMs) : Infinity;
-
-        if (currentTimeMs >= lineStartTime && currentTimeMs < nextLineStartTime) {
-            newLyricLineIndex = i;
-            break;
-        }
-    }
-
-    if (newLyricLineIndex !== currentLyricLineIndex) {
-        // Remove 'active-lyric' class from previous line
-        if (currentLyricLineIndex !== -1) {
-            const prevLyricElement = document.getElementById(`lyric-line-${currentLyricLineIndex}`);
-            if (prevLyricElement) {
-                prevLyricElement.classList.remove('active-lyric');
-            }
-        }
-
-        // Add 'active-lyric' class to the new current line
-        if (newLyricLineIndex !== -1) {
-            const newLyricElement = document.getElementById(`lyric-line-${newLyricLineIndex}`);
-            if (newLyricElement) {
-                newLyricElement.classList.add('active-lyric');
-                // Scroll the active lyric into view
-                newLyricElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
-        currentLyricLineIndex = newLyricLineIndex;
-    }
-}
 
 // --- Core Video Player Functions ---
 
@@ -474,11 +362,8 @@ function highlightVideoPlaylist(index) {
  * Shows the modal with a loading spinner.
  */
 function showModalWithLoading() {
-    infoModal.classList.remove('hidden');
-    // Add 'show' class after a slight delay to allow CSS transition to apply
-    setTimeout(() => {
-        infoModal.classList.add('show');
-    }, 10); 
+    infoModal.classList.remove('invisible', 'opacity-0'); // Make visible and opaque
+    infoModal.classList.add('show'); // Trigger CSS transition for content
     modalContent.innerHTML = '<div class="loader"></div><p class="text-center text-gray-400 mt-4">Getting insights...</p>';
     modalTitle.textContent = 'Artist Insights';
 }
@@ -487,10 +372,10 @@ function showModalWithLoading() {
  * Hides the modal.
  */
 function hideModal() {
-    infoModal.classList.remove('show');
-    // Hide completely after transition
+    infoModal.classList.remove('show'); // Remove show class to trigger reverse transition
+    // Wait for transition to complete before hiding completely
     setTimeout(() => {
-        infoModal.classList.add('hidden');
+        infoModal.classList.add('invisible', 'opacity-0');
         modalContent.innerHTML = ''; // Clear content after hiding
     }, 300); // Match CSS transition duration
 }
@@ -559,6 +444,7 @@ audio.addEventListener('ended', () => {
 artistInfoBtn.addEventListener('click', getArtistInsights);
 closeModalBtn.addEventListener('click', hideModal);
 infoModal.addEventListener('click', (e) => {
+    // Only close if clicking on the overlay, not the modal content itself
     if (e.target === infoModal) {
         hideModal();
     }
@@ -568,6 +454,7 @@ infoModal.addEventListener('click', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     fetchAudioPlaylist(); // Fetch the audio playlist initially
     audio.volume = volumeSlider.value; // Set initial volume from slider
+    // Initialize the custom CSS property for the volume slider fill
+    volumeSlider.style.setProperty('--track-fill', `${volumeSlider.value * 100}%`);
     showAudioPlayer(); // Ensure audio player is shown by default
 });
-

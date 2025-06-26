@@ -80,12 +80,6 @@ app.post('/api/artist-insight', async (req, res) => {
     try {
         const payload = {
             contents: [{ role: "user", parts: [{ text: prompt }] }],
-            // generationConfig: { // Example of a generation config, uncomment if needed
-            //     temperature: 0.7,
-            //     topP: 0.95,
-            //     topK: 40,
-            //     maxOutputTokens: 200,
-            // },
         };
 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
@@ -113,6 +107,7 @@ app.post('/api/artist-insight', async (req, res) => {
         res.status(500).json({ error: `Failed to get insights. ${error.message}` });
     }
 });
+
 
 // --- Server Start ---
 app.listen(port, () => {

@@ -1,120 +1,204 @@
 /* Sets the primary font for the entire application */
 body {
     font-family: 'Inter', sans-serif;
+    /* This gradient is applied in HTML body for Tailwind JIT, but keeping it here for clarity too if needed elsewhere. */
+    /* background: linear-gradient(135deg, #1a202c, #2d3748); */
 }
 
 /* --- Custom Scrollbar for Playlist and Modal --- */
-.playlist::-webkit-scrollbar,
-#modal-content::-webkit-scrollbar {
-    width: 6px;
+/* Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #1f2937; /* thumb and track */
 }
 
-.playlist::-webkit-scrollbar-track,
-#modal-content::-webkit-scrollbar-track {
-    background: #1f2937; /* Corresponds to Tailwind's gray-800 */
+/* Webkit (Chrome, Safari) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px; /* Wider for easier grabbing */
 }
 
-.playlist::-webkit-scrollbar-thumb,
-#modal-content::-webkit-scrollbar-thumb {
-    background: #4b5563; /* Corresponds to Tailwind's gray-600 */
-    border-radius: 3px;
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #1f2937; /* Darker track */
+    border-radius: 10px;
 }
 
-.playlist::-webkit-scrollbar-thumb:hover,
-#modal-content::-webkit-scrollbar-thumb:hover {
-    background: #6b7280; /* Corresponds to Tailwind's gray-500 */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #6b7280; /* Brighter thumb */
+    border-radius: 10px;
+    border: 2px solid #1f2937; /* Padding around thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af; /* Even brighter on hover */
+}
+
+/* Apply to specific elements */
+#playlist.custom-scrollbar,
+#modal-content.custom-scrollbar,
+#video-playlist.custom-scrollbar {
+    /* Apply the custom-scrollbar class directly in HTML */
 }
 
 
-/* --- Custom Styles for Range Sliders (Progress & Volume) --- */
+/* --- PROGRESS & VOLUME SLIDERS (ADVANCED STYLING) --- */
 input[type="range"] {
-    -webkit-appearance: none; /* Hides default browser styles on WebKit */
+    -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 6px;
-    background: #4b5563; /*-gray-600*/
-    border-radius: 3px;
-    outline: none; /* Removes the outline on focus */
-    opacity: 0.7; /* Slight transparency for a subtle look */
-    transition: opacity .2s;
+    height: 8px; /* Track height */
+    border-radius: 5px;
+    outline: none;
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    background: transparent; /* Make default background transparent */
 }
 
+/* Webkit (Chrome, Safari) - Track */
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(to right, #db2777 0%, #ec4899 var(--track-fill, 0%), #374151 var(--track-fill, 0%), #374151 100%);
+    border-radius: 5px;
+    transition: background 0.1s ease-in-out;
+}
+
+/* Firefox - Track */
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(to right, #db2777 0%, #ec4899 var(--track-fill, 0%), #374151 var(--track-fill, 0%), #374151 100%);
+    border-radius: 5px;
+    transition: background 0.1s ease-in-out;
+}
+
+/* Webkit (Chrome, Safari) - Thumb */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 16px;
-    height: 16px;
-    background: #f9fafb; /*-gray-50*/
-    border-radius: 50%; /* Makes it a circle */
-    cursor: pointer;
-    transition: background .2s;
-}
-
-input[type="range"]::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    background: #f9fafb; /*-gray-50*/
+    width: 20px;
+    height: 20px;
+    background: #ffffff; /* White thumb */
+    border: 2px solid #ec4899; /* Pink border */
     border-radius: 50%;
-    cursor: pointer;
+    cursor: grab; /* Indicate draggable */
+    box-shadow: 0 0 8px rgba(236, 72, 153, 0.8); /* Stronger glow */
+    transition: background .2s, box-shadow .2s, transform .2s, border-color .2s;
+    margin-top: -6px; /* Center thumb vertically on the track */
 }
 
-input[type="range"]:hover {
-    opacity: 1;
+/* Firefox - Thumb */
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border: 2px solid #ec4899;
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: 0 0 8px rgba(236, 72, 153, 0.8);
+    transition: background .2s, box-shadow .2s, transform .2s, border-color .2s;
 }
+
+/* Hover effects for thumb */
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #ec4899; /* Pink thumb on hover */
+    border-color: #ffffff; /* White border on hover */
+    transform: scale(1.1); /* Slightly enlarge */
+    box-shadow: 0 0 12px rgba(236, 72, 153, 1); /* Intense glow */
+    cursor: grabbing; /* Indicate dragging */
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+    background: #ec4899;
+    border-color: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0 0 12px rgba(236, 72, 153, 1);
+    cursor: grabbing;
+}
+
+/* Focus outline for accessibility */
+input[type="range"]:focus::-webkit-slider-thumb {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.5); /* Focus ring */
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.5);
+}
+
+/* JavaScript to update CSS custom property for track fill */
+/* This is handled in script.js now */
+
 
 /* --- Control Buttons --- */
 .control-btn {
     color: #9ca3af; /* gray-400 */
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .control-btn:hover {
     color: #ffffff; /* white */
+    transform: scale(1.1); /* Pop effect on hover */
 }
 
 .play-btn {
-    width: 4rem; /* w-16 */
-    height: 4rem; /* h-16 */
+    width: 5rem; /* w-20, slightly larger */
+    height: 5rem; /* h-20 */
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    /* box-shadow is now handled by Tailwind classes in HTML (shadow-lg hover:shadow-xl) */
 }
 
 /* --- Playlist item active state --- */
 .playlist li {
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 10px 16px; /* More padding */
+    border-radius: 10px; /* More rounded */
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    margin-bottom: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    margin-bottom: 6px; /* More spacing */
+    display: flex; /* Ensure flex behavior */
+    align-items: center;
+    justify-content: space-between;
 }
 
 .playlist li:hover {
     background-color: #374151; /* gray-700 */
+    transform: translateY(-2px); /* Subtle lift effect */
 }
 
 .playlist li.active {
     background-color: #db2777; /* pink-600 */
     color: #ffffff;
     font-weight: 600;
+    box-shadow: 0 4px 10px rgba(219, 39, 119, 0.4); /* Pink glow on active */
+    transform: scale(1.02); /* Slightly larger */
 }
 
 
 /* --- Gemini Modal Styles --- */
-.hidden {
-    display: none;
+/* .hidden is handled by JS for display: none */
+
+/* Modal overlay transition */
+#info-modal.show {
+    opacity: 1;
+    visibility: visible;
 }
 
-/* Loading spinner for the modal */
+/* Modal content transition */
+#info-modal.show > div {
+    opacity: 1;
+    transform: scale(1);
+}
+
 .loader {
-    border: 5px solid #374151; /* gray-700 */
-    border-top: 5px solid #ec4899; /* pink-500 */
+    border: 5px solid #374151;
+    border-top: 5px solid #ec4899;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 60px; /* Larger spinner */
+    height: 60px;
     animation: spin 1s linear infinite;
-    margin: 40px auto; /* Centered in the modal content area */
+    margin: 40px auto;
 }
 
 @keyframes spin {
@@ -122,28 +206,22 @@ input[type="range"]:hover {
     100% { transform: rotate(360deg); }
 }
 
-/* Modal animation */
-#info-modal.show .bg-gray-800 {
-    opacity: 1;
-    transform: scale(1);
-}
-
 /* --- Navigation Button Styles --- */
 .nav-btn {
     background-color: #374151; /* gray-700 */
     color: #9ca3af; /* gray-400 */
     margin: 0 4px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-btn.active {
     background-color: #ec4899; /* pink-500 */
     color: #ffffff;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 6px 12px -2px rgba(236, 72, 153, 0.4); /* Stronger pink shadow */
+    transform: translateY(-2px); /* Lift effect */
 }
 
 /* --- Responsive YouTube iframe container (16:9 aspect ratio) --- */
-/* The "aspect-w-16 aspect-h-9" Tailwind classes handle this,
-   but here's the underlying CSS for reference if not using Tailwind. */
 .aspect-w-16 {
     position: relative;
     width: 100%;
@@ -153,7 +231,7 @@ input[type="range"]:hover {
     display: block;
     padding-top: 56.25%; /* 9 / 16 * 100 */
 }
-.aspect-h-9 > div { /* For the inner content, like iframe */
+.aspect-h-9 > div {
     position: absolute;
     top: 0;
     left: 0;
