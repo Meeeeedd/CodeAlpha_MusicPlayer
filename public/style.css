@@ -1,0 +1,162 @@
+/* Sets the primary font for the entire application */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- Custom Scrollbar for Playlist and Modal --- */
+.playlist::-webkit-scrollbar,
+#modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.playlist::-webkit-scrollbar-track,
+#modal-content::-webkit-scrollbar-track {
+    background: #1f2937; /* Corresponds to Tailwind's gray-800 */
+}
+
+.playlist::-webkit-scrollbar-thumb,
+#modal-content::-webkit-scrollbar-thumb {
+    background: #4b5563; /* Corresponds to Tailwind's gray-600 */
+    border-radius: 3px;
+}
+
+.playlist::-webkit-scrollbar-thumb:hover,
+#modal-content::-webkit-scrollbar-thumb:hover {
+    background: #6b7280; /* Corresponds to Tailwind's gray-500 */
+}
+
+
+/* --- Custom Styles for Range Sliders (Progress & Volume) --- */
+input[type="range"] {
+    -webkit-appearance: none; /* Hides default browser styles on WebKit */
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #4b5563; /*-gray-600*/
+    border-radius: 3px;
+    outline: none; /* Removes the outline on focus */
+    opacity: 0.7; /* Slight transparency for a subtle look */
+    transition: opacity .2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #f9fafb; /*-gray-50*/
+    border-radius: 50%; /* Makes it a circle */
+    cursor: pointer;
+    transition: background .2s;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #f9fafb; /*-gray-50*/
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+input[type="range"]:hover {
+    opacity: 1;
+}
+
+/* --- Control Buttons --- */
+.control-btn {
+    color: #9ca3af; /* gray-400 */
+    transition: color 0.3s ease;
+}
+
+.control-btn:hover {
+    color: #ffffff; /* white */
+}
+
+.play-btn {
+    width: 4rem; /* w-16 */
+    height: 4rem; /* h-16 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+}
+
+/* --- Playlist item active state --- */
+.playlist li {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin-bottom: 4px;
+}
+
+.playlist li:hover {
+    background-color: #374151; /* gray-700 */
+}
+
+.playlist li.active {
+    background-color: #db2777; /* pink-600 */
+    color: #ffffff;
+    font-weight: 600;
+}
+
+
+/* --- Gemini Modal Styles --- */
+.hidden {
+    display: none;
+}
+
+/* Loading spinner for the modal */
+.loader {
+    border: 5px solid #374151; /* gray-700 */
+    border-top: 5px solid #ec4899; /* pink-500 */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 40px auto; /* Centered in the modal content area */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modal animation */
+#info-modal.show .bg-gray-800 {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* --- Navigation Button Styles --- */
+.nav-btn {
+    background-color: #374151; /* gray-700 */
+    color: #9ca3af; /* gray-400 */
+    margin: 0 4px;
+}
+
+.nav-btn.active {
+    background-color: #ec4899; /* pink-500 */
+    color: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Responsive YouTube iframe container (16:9 aspect ratio) --- */
+/* The "aspect-w-16 aspect-h-9" Tailwind classes handle this,
+   but here's the underlying CSS for reference if not using Tailwind. */
+.aspect-w-16 {
+    position: relative;
+    width: 100%;
+}
+.aspect-w-16::before {
+    content: '';
+    display: block;
+    padding-top: 56.25%; /* 9 / 16 * 100 */
+}
+.aspect-h-9 > div { /* For the inner content, like iframe */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
