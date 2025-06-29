@@ -31,7 +31,11 @@ const audioPlaylistSection = document.getElementById('audio-playlist-section');
 const videoPlayerSection = document.getElementById('video-player-section');
 const videoPlaylistEl = document.getElementById('video-playlist');
 const youtubePlayerContainer = document.getElementById('youtube-player-container');
-const videoInfoEl = document.getElementById('video-info');
+// New video UI elements
+const currentVideoInfoEl = document.getElementById('current-video-info');
+const currentVideoTitleEl = document.getElementById('current-video-title');
+const currentVideoArtistEl = document.getElementById('current-video-artist');
+
 
 // --- Gemini Feature Modal Elements ---
 const artistInfoBtn = document.getElementById('artist-info-btn'); // Button to get artist insights
@@ -96,12 +100,13 @@ function showAudioPlayer() {
     pauseSong(); // Pause audio if switching away from video
     // Clear YouTube iframe content to stop any playing video
     youtubePlayerContainer.innerHTML = `
-        <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
-            <i class="fab fa-youtube fa-4x text-red-500"></i>
-            <span class="ml-4 text-xl text-var(--text-secondary)">No Video Selected</span>
+        <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
+            <i class="fab fa-youtube fa-4x text-red-500 mb-4"></i>
+            <span class="text-xl font-semibold text-var(--text-primary) text-center">No Video Selected</span>
+            <span class="text-md text-var(--text-secondary) text-center mt-2">Choose a clip from the playlist below</span>
         </div>
     `;
-    videoInfoEl.textContent = 'Select a video from the playlist below.';
+    currentVideoInfoEl.classList.add('hidden'); // Hide video info when switching away
 }
 
 /**
@@ -307,21 +312,25 @@ async function fetchVideoPlaylist() {
         } else {
             videoInfoEl.textContent = 'No videos in playlist.';
             youtubePlayerContainer.innerHTML = `
-                <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
-                    <i class="fab fa-youtube fa-4x text-red-500"></i>
-                    <span class="ml-4 text-xl text-var(--text-secondary)">No Video Selected</span>
+                <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
+                    <i class="fab fa-youtube fa-4x text-red-500 mb-4"></i>
+                    <span class="text-xl font-semibold text-var(--text-primary) text-center">No Video Selected</span>
+                    <span class="text-md text-var(--text-secondary) text-center mt-2">Choose a clip from the playlist below</span>
                 </div>
             `;
+            currentVideoInfoEl.classList.add('hidden'); // Hide info when no videos
         }
     } catch (error) {
         console.error('Failed to fetch video playlist:', error);
         videoInfoEl.textContent = 'Error loading video playlist.';
         youtubePlayerContainer.innerHTML = `
-            <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
-                <i class="fas fa-exclamation-triangle fa-4x text-red-400"></i>
-                <span class="ml-4 text-xl text-red-400">Error Loading Videos</span>
+            <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
+                <i class="fas fa-exclamation-triangle fa-4x text-red-400 mb-4"></i>
+                <span class="text-xl font-semibold text-red-400 text-center">Error Loading Videos</span>
+                <span class="text-md text-red-400 text-center mt-2">Please check your network and try again.</span>
             </div>
         `;
+        currentVideoInfoEl.classList.add('hidden'); // Hide info on error
     }
 }
 
@@ -334,15 +343,22 @@ function loadVideo(index) {
         console.warn('Attempted to load an invalid video index or empty video playlist.');
         videoInfoEl.textContent = 'No video selected or available.';
         youtubePlayerContainer.innerHTML = `
-            <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
-                <i class="fab fa-youtube fa-4x text-red-500"></i>
-                <span class="ml-4 text-xl text-var(--text-secondary)">No Video Selected</span>
+            <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
+                <i class="fab fa-youtube fa-4x text-red-500 mb-4"></i>
+                <span class="text-xl font-semibold text-var(--text-primary) text-center">No Video Selected</span>
+                <span class="text-md text-var(--text-secondary) text-center mt-2">Choose a clip from the playlist below</span>
             </div>
         `;
+        currentVideoInfoEl.classList.add('hidden'); // Hide info
         return;
     }
     const video = videoPlaylist[index];
-    videoInfoEl.textContent = `${video.title} - ${video.artist}`;
+    
+    // Update the "Currently Playing Video" info section
+    currentVideoTitleEl.textContent = video.title;
+    currentVideoArtistEl.textContent = video.artist;
+    currentVideoInfoEl.classList.remove('hidden'); // Show the info section
+
     youtubePlayerContainer.innerHTML = `
         <iframe
             class="w-full h-full"
@@ -363,14 +379,18 @@ function buildVideoPlaylistUI() {
     videoPlaylistEl.innerHTML = '';
     videoPlaylist.forEach((video, index) => {
         const listItem = document.createElement('li');
-        // Ensure text color classes reference CSS variables directly on inner elements for robustness
-        listItem.classList.add('flex', 'justify-between', 'items-center', 'cursor-pointer', 'p-2', 'rounded-md', 'hover:bg-var(--hover-bg)', 'transition', 'duration-200');
+        listItem.classList.add('video-playlist-item'); // Apply new unified class for styling
+        
+        // Construct YouTube thumbnail URL
+        const thumbnailUrl = `https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`;
+
         listItem.innerHTML = `
-            <div>
-                <div class="text-sm font-medium text-var(--text-primary)">${video.title}</div>
-                <div class="text-xs text-var(--text-secondary)">${video.artist}</div>
+            <img src="${thumbnailUrl}" alt="${video.title} thumbnail" onerror="this.onerror=null;this.src='https://placehold.co/90x50/2d3748/ffffff?text=Video';" />
+            <div class="video-info-text">
+                <div class="video-title">${video.title}</div>
+                <div class="video-artist">${video.artist}</div>
             </div>
-            ${video.duration ? `<div class="text-xs text-var(--text-secondary)">${formatTime(video.duration)}</div>` : ''}
+            ${video.duration ? `<div class="video-duration">${formatTime(video.duration)}</div>` : ''}
         `;
         listItem.addEventListener('click', () => {
             loadVideo(index);

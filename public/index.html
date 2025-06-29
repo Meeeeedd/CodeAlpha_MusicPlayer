@@ -44,7 +44,7 @@
                 <div class="space-y-1">
                     <h2 id="song-title" class="text-3xl font-bold mb-1 truncate text-var(--accent-title-color)">Song Title</h2>
                     <p id="artist-name" class="text-lg mb-3 truncate text-var(--text-secondary)">Artist Name</p>
-                    <!-- Gemini Feature Button - Added bg-gradient-to-r for subtle gradient -->
+                    <!-- Gemini Feature Button -->
                     <button id="artist-info-btn" class="text-sm bg-gradient-to-r from-var(--accent-pink-base) to-var(--accent-purple) hover:from-var(--accent-pink-hover) hover:to-var(--accent-purple-hover) font-bold py-2 px-5 rounded-full mt-2 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-var(--accent-pink-base) focus:ring-opacity-50 inline-flex items-center space-x-2">
                         <span>✨ Get Artist Insights</span>
                     </button>
@@ -95,12 +95,19 @@
         <!-- Video Player Section (initially hidden) -->
         <div id="video-player-section" class="w-full bg-var(--card-bg) shadow-xl rounded-2xl p-6 relative overflow-hidden transition-all duration-500 ease-in-out transform hidden">
             <h2 class="text-2xl font-bold mb-4 text-center text-var(--accent-title-color)">Video Clips</h2>
-            <p id="video-info" class="text-center mb-4 text-lg text-var(--text-secondary)">Select a video from the playlist below.</p>
+            
+            <!-- Currently Playing Video Info -->
+            <div id="current-video-info" class="text-center mb-4 p-2 rounded-lg bg-var(--alt-card-bg) text-var(--text-primary) shadow-sm hidden">
+                <p class="text-xl font-semibold mb-1" id="current-video-title">No Video Playing</p>
+                <p class="text-lg text-var(--text-secondary)" id="current-video-artist"></p>
+            </div>
+
             <div id="youtube-player-container" class="aspect-w-16 aspect-h-9 w-full rounded-lg overflow-hidden shadow-md mb-6">
                 <!-- YouTube iframe will be loaded here -->
-                <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
-                    <i class="fab fa-youtube fa-4x text-red-500"></i>
-                    <span class="ml-4 text-xl text-var(--text-secondary)">No Video Selected</span>
+                <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
+                    <i class="fab fa-youtube fa-4x text-red-500 mb-4"></i>
+                    <span class="text-xl font-semibold text-var(--text-primary) text-center">No Video Selected</span>
+                    <span class="text-md text-var(--text-secondary) text-center mt-2">Choose a clip from the playlist below</span>
                 </div>
             </div>
 

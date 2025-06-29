@@ -325,6 +325,85 @@ input[type="range"]:focus::-moz-range-thumb {
     box-shadow: 0 0 0 4px rgba(var(--accent-pink-base-rgb), 0.5); /* Focus ring with theme color */
 }
 
+/* --- Video Playlist Specific Styles --- */
+/* Each video list item will be a flex container for thumbnail and text */
+.video-playlist-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    background-color: transparent; /* Default */
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.video-playlist-item:hover {
+    background-color: var(--hover-bg);
+    transform: translateY(-2px);
+}
+
+.video-playlist-item.active {
+    background-color: var(--accent-pink-base);
+    color: #ffffff; /* Text color for active item */
+    font-weight: 600;
+    box-shadow: 0 4px 10px var(--active-item-shadow);
+    transform: scale(1.02);
+}
+
+/* Style for video thumbnails */
+.video-playlist-item img {
+    width: 90px; /* Fixed width for thumbnails */
+    height: 50px; /* Fixed height for 16:9 aspect ratio */
+    object-fit: cover;
+    border-radius: 6px; /* Slightly rounded corners for thumbnails */
+    margin-right: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.video-playlist-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Text container within video playlist item */
+.video-playlist-item .video-info-text {
+    flex-grow: 1;
+    overflow: hidden; /* Hide overflowing text */
+}
+
+.video-playlist-item .video-info-text .video-title {
+    font-size: 0.9rem; /* Slightly smaller for compactness */
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.video-playlist-item .video-info-text .video-artist {
+    font-size: 0.75rem; /* Even smaller for artist name */
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.video-playlist-item.active .video-info-text .video-title,
+.video-playlist-item.active .video-info-text .video-artist {
+    color: #ffffff; /* Ensure text is white when active */
+}
+
+.video-playlist-item .video-duration {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-left: 10px;
+    flex-shrink: 0; /* Prevent it from shrinking */
+}
+
+.video-playlist-item.active .video-duration {
+    color: #ffffff; /* Ensure duration is white when active */
+}
 
 /* --- Responsive YouTube iframe container (16:9 aspect ratio) --- */
 .aspect-w-16 {
