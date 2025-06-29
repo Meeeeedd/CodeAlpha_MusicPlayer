@@ -80,14 +80,7 @@ const videoPlaylist = [
         title: 'Nsitou Li Nseni',
         artist: 'Samara',
         youtubeId: 'cq5EnKIIpxk', // Corrected: Just the video ID
-        duration: 271
-    },
-    {
-        id: 'v5',
-        title: 'Despacito',
-        artist: 'Luis Fonsi ft. Daddy Yankee',
-        youtubeId: 'kJQP7kA_zcs', // Already correct
-        duration: 279
+        duration: 325
     }
 ];
 

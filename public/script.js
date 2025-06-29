@@ -35,6 +35,9 @@ const youtubePlayerContainer = document.getElementById('youtube-player-container
 const currentVideoInfoEl = document.getElementById('current-video-info');
 const currentVideoTitleEl = document.getElementById('current-video-title');
 const currentVideoArtistEl = document.getElementById('current-video-artist');
+// New video control buttons
+const prevVideoBtn = document.getElementById('prev-video-btn');
+const nextVideoBtn = document.getElementById('next-video-btn');
 
 
 // --- Gemini Feature Modal Elements ---
@@ -373,6 +376,23 @@ function loadVideo(index) {
 }
 
 /**
+ * Plays the previous video clip.
+ */
+function playPreviousVideo() {
+    currentVideoIndex = (currentVideoIndex - 1 + videoPlaylist.length) % videoPlaylist.length;
+    loadVideo(currentVideoIndex);
+}
+
+/**
+ * Plays the next video clip.
+ */
+function playNextVideo() {
+    currentVideoIndex = (currentVideoIndex + 1) % videoPlaylist.length;
+    loadVideo(currentVideoIndex);
+}
+
+
+/**
  * Populates the video playlist UI.
  */
 function buildVideoPlaylistUI() {
@@ -494,6 +514,11 @@ audio.addEventListener('ended', () => {
         pauseSong();
     }
 });
+
+// Video Player Controls
+prevVideoBtn.addEventListener('click', playPreviousVideo);
+nextVideoBtn.addEventListener('click', playNextVideo);
+
 
 // Artist info button (Gemini modal)
 artistInfoBtn.addEventListener('click', getArtistInsights);

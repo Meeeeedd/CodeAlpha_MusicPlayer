@@ -102,7 +102,7 @@
                 <p class="text-lg text-var(--text-secondary)" id="current-video-artist"></p>
             </div>
 
-            <div id="youtube-player-container" class="aspect-w-16 aspect-h-9 w-full rounded-lg overflow-hidden shadow-md mb-6">
+            <div id="youtube-player-container" class="aspect-w-16 aspect-h-9 w-full rounded-lg overflow-hidden shadow-md my-6">
                 <!-- YouTube iframe will be loaded here -->
                 <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
                     <i class="fab fa-youtube fa-4x text-red-500 mb-4"></i>
@@ -110,6 +110,18 @@
                     <span class="text-md text-var(--text-secondary) text-center mt-2">Choose a clip from the playlist below</span>
                 </div>
             </div>
+
+            <!-- Video Controls -->
+            <div class="flex items-center justify-center space-x-8 mb-6">
+                <button id="prev-video-btn" class="control-btn p-4 rounded-full hover:bg-var(--hover-bg) transition duration-300 text-var(--text-secondary) hover:text-var(--text-primary)">
+                    <i class="fas fa-backward fa-2x"></i>
+                </button>
+                <!-- Note: No play/pause button for video here as YouTube iframe handles it -->
+                <button id="next-video-btn" class="control-btn p-4 rounded-full hover:bg-var(--hover-bg) transition duration-300 text-var(--text-secondary) hover:text-var(--text-primary)">
+                    <i class="fas fa-forward fa-2x"></i>
+                </button>
+            </div>
+
 
             <!-- Video Playlist -->
             <div id="video-playlist-container" class="bg-var(--alt-card-bg) rounded-lg p-4">
