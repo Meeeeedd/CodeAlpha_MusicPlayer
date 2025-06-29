@@ -61,8 +61,11 @@
                 <input type="range" id="progress-bar" value="0" class="w-full h-2 rounded-full">
             </div>
 
-            <!-- Controls -->
+            <!-- Controls - Added Shuffle Button -->
             <div class="flex items-center justify-center space-x-8 mb-6">
+                <button id="shuffle-btn" class="control-btn p-4 rounded-full hover:bg-var(--hover-bg) transition duration-300 text-var(--text-secondary) hover:text-var(--text-primary)">
+                    <i class="fas fa-shuffle fa-lg"></i>
+                </button>
                 <button id="prev-btn" class="control-btn p-4 rounded-full hover:bg-var(--hover-bg) transition duration-300 text-var(--text-secondary) hover:text-var(--text-primary)">
                     <i class="fas fa-backward fa-2x"></i>
                 </button>
@@ -76,10 +79,10 @@
             
             <!-- Volume Control -->
             <div class="flex items-center justify-center space-x-4">
-                <i class="fas fa-volume-down text-var(--text-secondary)"></i>
+                <i id="volume-icon-left" class="fas fa-volume-down text-var(--text-secondary)"></i>
                 <!-- Sliders now reference CSS variables defined in style.css -->
                 <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1" class="w-28 h-2 rounded-full">
-                <i class="fas fa-volume-up text-var(--text-secondary)"></i>
+                <i id="volume-icon-right" class="fas fa-volume-up text-var(--text-secondary)"></i>
             </div>
             
         </div>
@@ -96,13 +99,14 @@
         <div id="video-player-section" class="w-full bg-var(--card-bg) shadow-xl rounded-2xl p-6 relative overflow-hidden transition-all duration-500 ease-in-out transform hidden">
             <h2 class="text-2xl font-bold mb-4 text-center text-var(--accent-title-color)">Video Clips</h2>
             
-            <!-- Currently Playing Video Info -->
-            <div id="current-video-info" class="text-center mb-4 p-2 rounded-lg bg-var(--alt-card-bg) text-var(--text-primary) shadow-sm hidden">
+            <!-- Currently Playing Video Info - Reduced mb to mb-3 -->
+            <div id="current-video-info" class="text-center mb-3 p-2 rounded-lg bg-var(--alt-card-bg) text-var(--text-primary) shadow-sm hidden">
                 <p class="text-xl font-semibold mb-1" id="current-video-title">No Video Playing</p>
                 <p class="text-lg text-var(--text-secondary)" id="current-video-artist"></p>
             </div>
 
-            <div id="youtube-player-container" class="aspect-w-16 aspect-h-9 w-full rounded-lg overflow-hidden shadow-md my-6">
+            <!-- YouTube Player Container - Reduced my to mt-3 mb-4 -->
+            <div id="youtube-player-container" class="aspect-w-16 aspect-h-9 w-full rounded-lg overflow-hidden shadow-md mt-3 mb-4">
                 <!-- YouTube iframe will be loaded here -->
                 <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
                     <i class="fab fa-youtube fa-4x text-red-500 mb-4"></i>
@@ -111,8 +115,8 @@
                 </div>
             </div>
 
-            <!-- Video Controls -->
-            <div class="flex items-center justify-center space-x-8 mb-6">
+            <!-- Video Controls - Reduced mb to mb-4 -->
+            <div class="flex items-center justify-center space-x-8 mb-4">
                 <button id="prev-video-btn" class="control-btn p-4 rounded-full hover:bg-var(--hover-bg) transition duration-300 text-var(--text-secondary) hover:text-var(--text-primary)">
                     <i class="fas fa-backward fa-2x"></i>
                 </button>
@@ -144,7 +148,7 @@
             <div id="modal-content" class="text-lg leading-relaxed max-h-96 overflow-y-auto pr-2 custom-scrollbar text-var(--text-primary)">
                 <!-- Gemini content or loading spinner will be injected here -->
             </div>
-            <button id="close-modal-btn" class="absolute top-4 right-4 text-var(--text-secondary) hover:text-var(--text-primary) transition duration-300 focus:outline-none focus:ring-2 focus:ring-var(--text-secondary) focus:ring-opacity-50 p-2 rounded-full hover:bg-var(--hover-bg)">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-var(--text-secondary) hover:text-var(--text-primary) transition duration-300 focus:outline-none focus:ring-2 focus:ring-var(--text-secondary) focus:ring-opacity=50 p-2 rounded-full hover:bg-var(--hover-bg)">
                 <i class="fas fa-times fa-lg"></i>
             </button>
         </div>

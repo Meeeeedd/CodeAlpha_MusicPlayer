@@ -124,7 +124,7 @@ input[type="range"] {
     appearance: none;
     width: 100%;
     height: 8px; /* Track height */
-    border-radius: 5px;
+    border-radius: 50%;
     outline: none;
     padding: 0; /* Remove default padding */
     margin: 0; /* Remove default margin */
@@ -223,6 +223,16 @@ input[type="range"]:focus::-moz-range-thumb {
     align-items: center;
     justify-content: center;
 }
+
+/* NEW: Style for active shuffle button */
+#shuffle-btn.active {
+    color: var(--accent-pink-base); /* Highlight color when shuffle is active */
+    transform: scale(1.15); /* Slightly larger pop for active state */
+}
+#shuffle-btn.active:hover {
+    color: var(--accent-pink-hover); /* Darker pink on hover when active */
+}
+
 
 /* --- Playlist item active state --- */
 .playlist li {
@@ -405,7 +415,7 @@ input[type="range"]:focus::-moz-range-thumb {
     color: #ffffff; /* Ensure duration is white when active */
 }
 
-/* --- Responsive YouTube iframe container (16:9 aspect ratio) --- */
+/* --- Responsive YouTube iframe container (New height) --- */
 .aspect-w-16 {
     position: relative;
     width: 100%;
@@ -413,7 +423,7 @@ input[type="range"]:focus::-moz-range-thumb {
 .aspect-w-16::before {
     content: '';
     display: block;
-    padding-top: 56.25%; /* 9 / 16 * 100 */
+    padding-top: 65%; /* Increased from 56.25% to make the video taller */
 }
 .aspect-h-9 > div {
     position: absolute;

@@ -7,6 +7,7 @@ let isPlaying = false; // Tracks if audio music is currently playing
 let isAutoplay = true; // Controls if the next audio song plays automatically
 let activeView = 'audio'; // Tracks the active view: 'audio' or 'video'
 let currentTheme = 'dark'; // Tracks the current theme: 'dark' or 'light' (initialized based on localStorage)
+let isShuffle = false; // New: Tracks if shuffle mode is active
 
 // --- DOM Element References ---
 const audio = document.getElementById('audio-source'); // The HTML <audio> element
@@ -22,6 +23,12 @@ const currentTimeEl = document.getElementById('current-time'); // Current time d
 const durationEl = document.getElementById('duration'); // Total duration display
 const volumeSlider = document.getElementById('volume-slider'); // Volume control slider
 const audioPlaylistEl = document.getElementById('playlist'); // Audio playlist container
+// Volume icons
+const volumeIconLeft = document.getElementById('volume-icon-left');
+const volumeIconRight = document.getElementById('volume-icon-right');
+// Shuffle button
+const shuffleBtn = document.getElementById('shuffle-btn');
+
 
 // --- Navigation Elements ---
 const audioNavBtn = document.getElementById('audio-nav-btn');
@@ -35,7 +42,7 @@ const youtubePlayerContainer = document.getElementById('youtube-player-container
 const currentVideoInfoEl = document.getElementById('current-video-info');
 const currentVideoTitleEl = document.getElementById('current-video-title');
 const currentVideoArtistEl = document.getElementById('current-video-artist');
-// New video control buttons
+// Video control buttons
 const prevVideoBtn = document.getElementById('prev-video-btn');
 const nextVideoBtn = document.getElementById('next-video-btn');
 
@@ -217,10 +224,18 @@ function playPreviousSong() {
 }
 
 /**
- * Plays the next audio song.
+ * Plays the next audio song. Handles shuffle logic.
  */
 function playNextSong() {
-    currentSongIndex = (currentSongIndex + 1) % playlist.length;
+    if (isShuffle) {
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * playlist.length);
+        } while (randomIndex === currentSongIndex && playlist.length > 1); // Ensure different song if more than 1
+        currentSongIndex = randomIndex;
+    } else {
+        currentSongIndex = (currentSongIndex + 1) % playlist.length;
+    }
     loadSong(currentSongIndex);
     playSong();
 }
@@ -254,12 +269,33 @@ function setProgress(event) {
 }
 
 /**
- * Sets the audio volume.
+ * Sets the audio volume and updates the volume icon.
  */
 function setVolume(event) {
     audio.volume = event.target.value;
     // Update the custom CSS property for the volume slider fill
     volumeSlider.style.setProperty('--track-fill', `${volumeSlider.value * 100}%`);
+    updateVolumeIcon(); // Call the new function to update the icon
+}
+
+/**
+ * Updates the volume icon based on the current audio volume level.
+ */
+function updateVolumeIcon() {
+    // Remove all volume icon classes first
+    volumeIconLeft.classList.remove('fa-volume-mute', 'fa-volume-down', 'fa-volume-up');
+    volumeIconRight.classList.remove('fa-volume-mute', 'fa-volume-down', 'fa-volume-up');
+
+    if (audio.volume === 0) {
+        volumeIconLeft.classList.add('fa-volume-mute');
+        volumeIconRight.classList.add('fa-volume-mute');
+    } else if (audio.volume < 0.5) {
+        volumeIconLeft.classList.add('fa-volume-down');
+        volumeIconRight.classList.add('fa-volume-down');
+    } else {
+        volumeIconLeft.classList.add('fa-volume-up');
+        volumeIconRight.classList.add('fa-volume-up');
+    }
 }
 
 /**
@@ -296,6 +332,15 @@ function highlightAudioPlaylist(index) {
     });
 }
 
+/**
+ * Toggles the shuffle mode on/off for audio playback.
+ */
+function toggleShuffle() {
+    isShuffle = !isShuffle;
+    shuffleBtn.classList.toggle('active', isShuffle); // Toggle 'active' class for visual feedback
+    console.log(`Shuffle mode: ${isShuffle ? 'ON' : 'OFF'}`); // Log to console for debugging
+}
+
 
 // --- Core Video Player Functions ---
 
@@ -313,7 +358,6 @@ async function fetchVideoPlaylist() {
             buildVideoPlaylistUI();
             loadVideo(currentVideoIndex); // Load the first video
         } else {
-            videoInfoEl.textContent = 'No videos in playlist.';
             youtubePlayerContainer.innerHTML = `
                 <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
                     <i class="fab fa-youtube fa-4x text-red-500 mb-4"></i>
@@ -325,7 +369,6 @@ async function fetchVideoPlaylist() {
         }
     } catch (error) {
         console.error('Failed to fetch video playlist:', error);
-        videoInfoEl.textContent = 'Error loading video playlist.';
         youtubePlayerContainer.innerHTML = `
             <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
                 <i class="fas fa-exclamation-triangle fa-4x text-red-400 mb-4"></i>
@@ -344,7 +387,6 @@ async function fetchVideoPlaylist() {
 function loadVideo(index) {
     if (!videoPlaylist.length || index < 0 || index >= videoPlaylist.length) {
         console.warn('Attempted to load an invalid video index or empty video playlist.');
-        videoInfoEl.textContent = 'No video selected or available.';
         youtubePlayerContainer.innerHTML = `
             <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg) flex-col p-4 rounded-lg">
                 <i class="fab fa-youtube fa-4x text-red-500 mb-4"></i>
@@ -515,6 +557,9 @@ audio.addEventListener('ended', () => {
     }
 });
 
+// Shuffle button event listener
+shuffleBtn.addEventListener('click', toggleShuffle);
+
 // Video Player Controls
 prevVideoBtn.addEventListener('click', playPreviousVideo);
 nextVideoBtn.addEventListener('click', playNextVideo);
@@ -540,5 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.volume = volumeSlider.value; // Set initial volume from slider
     // Initialize the custom CSS property for the volume slider fill
     volumeSlider.style.setProperty('--track-fill', `${volumeSlider.value * 100}%`);
+    updateVolumeIcon(); // Call initially to set the correct icon based on default volume
+
     showAudioPlayer(); // Ensure audio player is shown by default
 });
