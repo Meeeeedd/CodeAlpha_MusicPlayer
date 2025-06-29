@@ -43,6 +43,9 @@ body {
     --slider-thumb-border: #db2777; /* Pink border for thumb */
     --slider-thumb-hover: #ec4899; /* Lighter pink for thumb on hover */
     --slider-thumb-hover-border: #ffffff; /* White border for thumb on hover */
+
+    /* RGB values for dynamic shadow colors */
+    --accent-pink-base-rgb: 219, 39, 119; /* pink-600 */
 }
 
 /* --- Light Theme Overrides --- */
@@ -81,6 +84,9 @@ body.light-theme {
     --slider-thumb-border: #ec4899; /* Pink border for thumb */
     --slider-thumb-hover: #db2777; /* Darker pink for thumb on hover */
     --slider-thumb-hover-border: #1e293b; /* Dark blue-gray border on thumb hover */
+
+    /* RGB values for dynamic shadow colors */
+    --accent-pink-base-rgb: 236, 72, 153; /* pink-500 */
 }
 
 
@@ -294,6 +300,31 @@ input[type="range"]:focus::-moz-range-thumb {
     box-shadow: 0 6px 12px -2px var(--active-item-shadow);
     transform: translateY(-2px);
 }
+
+/* --- Specific Button Text/Icon Color Adaptation --- */
+/* This ensures the text and icon on these buttons adapt to the theme */
+#artist-info-btn span, #artist-info-btn i,
+#play-pause-icon {
+    color: var(--text-primary); /* Uses text-primary from current theme */
+    transition: color 0.3s ease-in-out; /* Smooth transition */
+}
+
+/* --- Get Artist Insights Button Aesthetics --- */
+#artist-info-btn {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Subtle default shadow */
+}
+
+#artist-info-btn:hover {
+    /* Increased shadow and subtle glow on hover */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3), 0 0 15px rgba(var(--accent-pink-base-rgb), 0.7);
+    transform: scale(1.08); /* Slightly more prominent hover scale */
+}
+
+#artist-info-btn:focus {
+    outline: none; /* Already handled by Tailwind focus-ring, but double-check */
+    box-shadow: 0 0 0 4px rgba(var(--accent-pink-base-rgb), 0.5); /* Focus ring with theme color */
+}
+
 
 /* --- Responsive YouTube iframe container (16:9 aspect ratio) --- */
 .aspect-w-16 {

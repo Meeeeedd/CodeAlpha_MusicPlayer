@@ -58,35 +58,35 @@ const videoPlaylist = [
         id: 'v1',
         title: 'Maktoub',
         artist: 'A.L.A',
-        youtubeId: 'https://www.youtube.com/watch?v=Og_bA70eKvk', // Example ID, replace with actual
+        youtubeId: 'Og_bA70eKvk', // Corrected: Just the video ID
         duration: 230
     },
     {
         id: 'v2',
         title: '7 Snin',
         artist: 'Samara',
-        youtubeId: 'https://www.youtube.com/watch?v=NvCmx1KjLc8&list=RDNvCmx1KjLc8&index=1',
+        youtubeId: 'NvCmx1KjLc8', // Corrected: Just the video ID
         duration: 300
     },
     {
         id: 'v3',
         title: 'Dernier But',
         artist: 'Samara',
-        youtubeId: 'https://www.youtube.com/watch?v=v7QJlY_WRBs&list=RDNvCmx1KjLc8&index=5',
+        youtubeId: 'v7QJlY_WRBs', // Corrected: Just the video ID
         duration: 233
     },
     {
         id: 'v4',
-        title: 'Uptown Funk',
+        title: 'Nsitou Li Nseni',
         artist: 'Samara',
-        youtubeId: 'https://www.youtube.com/watch?v=cq5EnKIIpxk&list=RDNvCmx1KjLc8&index=7',
+        youtubeId: 'cq5EnKIIpxk', // Corrected: Just the video ID
         duration: 271
     },
     {
         id: 'v5',
         title: 'Despacito',
         artist: 'Luis Fonsi ft. Daddy Yankee',
-        youtubeId: 'kJQP7kA_zcs',
+        youtubeId: 'kJQP7kA_zcs', // Already correct
         duration: 279
     }
 ];
