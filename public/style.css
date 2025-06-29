@@ -1,15 +1,94 @@
 /* Sets the primary font for the entire application */
 body {
     font-family: 'Inter', sans-serif;
-    /* This gradient is applied in HTML body for Tailwind JIT, but keeping it here for clarity too if needed elsewhere. */
-    /* background: linear-gradient(135deg, #1a202c, #2d3748); */
+    /* Dynamic background gradient based on theme variables */
+    background: linear-gradient(135deg, var(--bg-gradient-from), var(--bg-gradient-to));
+    /* ENSURE ALL TEXT INHERITS PRIMARY COLOR */
+    color: var(--text-primary);
 }
+
+/* --- CSS Variables for Theming (Default: Dark Theme) --- */
+body {
+    /* Backgrounds */
+    --bg-gradient-from: #0a0e14; /* Deep, almost black blue-gray */
+    --bg-gradient-to: #1a202c;   /* Dark charcoal */
+    --card-bg: #1f2937;          /* Primary card background - Tailwind gray-800 */
+    --alt-card-bg: #2d3748;      /* Secondary card background (e.g., video playlist) - Tailwind gray-700 */
+    --footer-bg: #111827;        /* Footer background - Tailwind gray-900 */
+    --modal-bg: #1f2937;         /* Modal background - Tailwind gray-800 */
+    --modal-overlay-bg: rgba(0, 0, 0, 0.85); /* Darker, more opaque overlay */
+    
+    /* Text Colors */
+    --text-primary: #e2e8f0;     /* Off-white for main text */
+    --text-secondary: #94a3b8;   /* Light gray for secondary text - Tailwind slate-400 */
+    --text-secondary-lighter: #64748b; /* More subtle gray for credits - Tailwind slate-600 */
+
+    /* Accent Colors (Pink/Purple) */
+    --accent-title-color: #f0abfc; /* Lighter pink/purple for prominent titles */
+    --accent-link-color: #c084fc; /* Purple-ish for links - Tailwind purple-400 */
+    --accent-link-hover: #e879f9; /* Lighter purple/pink on link hover - Tailwind fuchsia-400 */
+    --accent-pink-base: #db2777; /* Main pink accent - Tailwind pink-600 */
+    --accent-pink-hover: #be185d;/* Darker pink on hover - Tailwind pink-700 */
+    --accent-purple: #8b5cf6;    /* Main purple accent - Tailwind purple-600 */
+    --accent-purple-hover: #7c3aed; /* Darker purple on hover - Tailwind purple-700 */
+
+    /* Interactive Elements & Borders */
+    --hover-bg: #374151;         /* General hover background - Tailwind gray-700 */
+    --active-item-shadow: rgba(219, 39, 119, 0.4); /* Pink shadow for active items */
+
+    /* Slider Specific Colors */
+    --slider-track-fill: #db2777; /* Pink for filled part of track */
+    --slider-track-unfill: #4b5563; /* Gray for unfilled part of track - Tailwind gray-600 */
+    --slider-thumb: #ffffff;    /* White thumb */
+    --slider-thumb-border: #db2777; /* Pink border for thumb */
+    --slider-thumb-hover: #ec4899; /* Lighter pink for thumb on hover */
+    --slider-thumb-hover-border: #ffffff; /* White border for thumb on hover */
+}
+
+/* --- Light Theme Overrides --- */
+body.light-theme {
+    /* Backgrounds */
+    --bg-gradient-from: #f8fafc; /* Very light, almost white blue-gray */
+    --bg-gradient-to: #eef2f6;   /* Slightly darker light blue-gray */
+    --card-bg: #ffffff;          /* Pure white card background */
+    --alt-card-bg: #f3f4f6;      /* Lighter gray secondary card - Tailwind gray-100 */
+    --footer-bg: #e5e7eb;        /* Footer background - Tailwind gray-200 */
+    --modal-bg: #ffffff;         /* Modal background - Pure white */
+    --modal-overlay-bg: rgba(0, 0, 0, 0.6); /* Slightly less opaque black overlay for light theme */
+
+    /* Text Colors */
+    --text-primary: #1e293b;     /* Darker blue-gray for main text - Tailwind slate-800 */
+    --text-secondary: #64748b;   /* Medium blue-gray for secondary text - Tailwind slate-600 */
+    --text-secondary-lighter: #94a3b8; /* Lighter gray for credits - Tailwind slate-400 */
+
+    /* Accent Colors (Pink/Purple) - Slightly softer/muted for light theme */
+    --accent-title-color: #8b5cf6; /* Main purple for titles in light theme */
+    --accent-link-color: #8b5cf6; /* Consistent purple for links */
+    --accent-link-hover: #7c3aed; /* Darker purple on link hover */
+    --accent-pink-base: #ec4899; /* Keep main pink */
+    --accent-pink-hover: #db2777;/* Darker pink on hover */
+    --accent-purple: #8b5cf6;    /* Keep main purple */
+    --accent-purple-hover: #7c3aed; /* Darker purple on hover */
+
+    /* Interactive Elements & Borders */
+    --hover-bg: #e2e8f0;         /* Lighter hover background - Tailwind slate-200 */
+    --active-item-shadow: rgba(219, 39, 119, 0.2); /* Softer shadow for active items */
+
+    /* Slider Specific Colors */
+    --slider-track-fill: #ec4899; /* Pink for filled part of track */
+    --slider-track-unfill: #d1d5db; /* Lighter gray for unfilled part of track - Tailwind gray-300 */
+    --slider-thumb: #1e293b;    /* Dark blue-gray thumb */
+    --slider-thumb-border: #ec4899; /* Pink border for thumb */
+    --slider-thumb-hover: #db2777; /* Darker pink for thumb on hover */
+    --slider-thumb-hover-border: #1e293b; /* Dark blue-gray border on thumb hover */
+}
+
 
 /* --- Custom Scrollbar for Playlist and Modal --- */
 /* Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #4b5563 #1f2937; /* thumb and track */
+  scrollbar-color: var(--text-secondary-lighter) var(--alt-card-bg); /* thumb and track */
 }
 
 /* Webkit (Chrome, Safari) */
@@ -18,25 +97,18 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #1f2937; /* Darker track */
+    background: var(--alt-card-bg); /* Darker track */
     border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #6b7280; /* Brighter thumb */
+    background: var(--text-secondary-lighter); /* Brighter thumb */
     border-radius: 10px;
-    border: 2px solid #1f2937; /* Padding around thumb */
+    border: 2px solid var(--alt-card-bg); /* Padding around thumb */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af; /* Even brighter on hover */
-}
-
-/* Apply to specific elements */
-#playlist.custom-scrollbar,
-#modal-content.custom-scrollbar,
-#video-playlist.custom-scrollbar {
-    /* Apply the custom-scrollbar class directly in HTML */
+    background: var(--text-secondary); /* Even brighter on hover */
 }
 
 
@@ -57,7 +129,7 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
     height: 8px;
-    background: linear-gradient(to right, #db2777 0%, #ec4899 var(--track-fill, 0%), #374151 var(--track-fill, 0%), #374151 100%);
+    background: linear-gradient(to right, var(--slider-track-fill) 0%, var(--slider-track-fill) var(--track-fill, 0%), var(--slider-track-unfill) var(--track-fill, 0%), var(--slider-track-unfill) 100%);
     border-radius: 5px;
     transition: background 0.1s ease-in-out;
 }
@@ -66,7 +138,7 @@ input[type="range"]::-webkit-slider-runnable-track {
 input[type="range"]::-moz-range-track {
     width: 100%;
     height: 8px;
-    background: linear-gradient(to right, #db2777 0%, #ec4899 var(--track-fill, 0%), #374151 var(--track-fill, 0%), #374151 100%);
+    background: linear-gradient(to right, var(--slider-track-fill) 0%, var(--slider-track-fill) var(--track-fill, 0%), var(--slider-track-unfill) var(--track-fill, 0%), var(--slider-track-unfill) 100%);
     border-radius: 5px;
     transition: background 0.1s ease-in-out;
 }
@@ -77,11 +149,11 @@ input[type="range"]::-webkit-slider-thumb {
     appearance: none;
     width: 20px;
     height: 20px;
-    background: #ffffff; /* White thumb */
-    border: 2px solid #ec4899; /* Pink border */
+    background: var(--slider-thumb); /* White thumb */
+    border: 2px solid var(--slider-thumb-border); /* Pink border */
     border-radius: 50%;
     cursor: grab; /* Indicate draggable */
-    box-shadow: 0 0 8px rgba(236, 72, 153, 0.8); /* Stronger glow */
+    box-shadow: 0 0 8px var(--slider-track-fill); /* Glow based on fill color */
     transition: background .2s, box-shadow .2s, transform .2s, border-color .2s;
     margin-top: -6px; /* Center thumb vertically on the track */
 }
@@ -90,112 +162,113 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    background: #ffffff;
-    border: 2px solid #ec4899;
+    background: var(--slider-thumb);
+    border: 2px solid var(--slider-thumb-border);
     border-radius: 50%;
     cursor: grab;
-    box-shadow: 0 0 8px rgba(236, 72, 153, 0.8);
+    box-shadow: 0 0 8px var(--slider-track-fill);
     transition: background .2s, box-shadow .2s, transform .2s, border-color .2s;
 }
 
 /* Hover effects for thumb */
 input[type="range"]::-webkit-slider-thumb:hover {
-    background: #ec4899; /* Pink thumb on hover */
-    border-color: #ffffff; /* White border on hover */
+    background: var(--slider-thumb-hover); /* Pink thumb on hover */
+    border-color: var(--slider-thumb-hover-border); /* White border on hover */
     transform: scale(1.1); /* Slightly enlarge */
-    box-shadow: 0 0 12px rgba(236, 72, 153, 1); /* Intense glow */
+    box-shadow: 0 0 12px var(--slider-track-fill); /* Intense glow based on fill color */
     cursor: grabbing; /* Indicate dragging */
 }
 
 input[type="range"]::-moz-range-thumb:hover {
-    background: #ec4899;
-    border-color: #ffffff;
+    background: var(--slider-thumb-hover);
+    border-color: var(--slider-thumb-hover-border);
     transform: scale(1.1);
-    box-shadow: 0 0 12px rgba(236, 72, 153, 1);
+    box-shadow: 0 0 12px var(--slider-track-fill);
     cursor: grabbing;
 }
 
 /* Focus outline for accessibility */
 input[type="range"]:focus::-webkit-slider-thumb {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.5); /* Focus ring */
+    box-shadow: 0 0 0 3px var(--accent-pink-base); /* Focus ring */
 }
 
 input[type="range"]:focus::-moz-range-thumb {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.5);
+    box-shadow: 0 0 0 3px var(--accent-pink-base);
 }
-
-/* JavaScript to update CSS custom property for track fill */
-/* This is handled in script.js now */
 
 
 /* --- Control Buttons --- */
 .control-btn {
-    color: #9ca3af; /* gray-400 */
+    color: var(--text-secondary);
     transition: color 0.3s ease, transform 0.2s ease;
 }
 
 .control-btn:hover {
-    color: #ffffff; /* white */
+    color: var(--text-primary);
     transform: scale(1.1); /* Pop effect on hover */
 }
 
 .play-btn {
-    width: 5rem; /* w-20, slightly larger */
-    height: 5rem; /* h-20 */
+    width: 5rem;
+    height: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* box-shadow is now handled by Tailwind classes in HTML (shadow-lg hover:shadow-xl) */
 }
 
 /* --- Playlist item active state --- */
 .playlist li {
-    padding: 10px 16px; /* More padding */
-    border-radius: 10px; /* More rounded */
+    padding: 10px 16px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-    margin-bottom: 6px; /* More spacing */
-    display: flex; /* Ensure flex behavior */
+    margin-bottom: 6px;
+    display: flex;
     align-items: center;
     justify-content: space-between;
+    /* Explicitly set color here for higher specificity if needed */
+    color: var(--text-primary);
 }
 
 .playlist li:hover {
-    background-color: #374151; /* gray-700 */
-    transform: translateY(-2px); /* Subtle lift effect */
+    background-color: var(--hover-bg);
+    transform: translateY(-2px);
 }
 
 .playlist li.active {
-    background-color: #db2777; /* pink-600 */
-    color: #ffffff;
+    background-color: var(--accent-pink-base);
+    color: #ffffff; /* Explicitly white for active item text for strong contrast */
     font-weight: 600;
-    box-shadow: 0 4px 10px rgba(219, 39, 119, 0.4); /* Pink glow on active */
-    transform: scale(1.02); /* Slightly larger */
+    box-shadow: 0 4px 10px var(--active-item-shadow); /* Dynamic shadow defined by var */
+    transform: scale(1.02);
 }
 
-
 /* --- Gemini Modal Styles --- */
-/* .hidden is handled by JS for display: none */
+#info-modal {
+    background-color: var(--modal-overlay-bg);
+}
 
-/* Modal overlay transition */
+#info-modal > div {
+    background-color: var(--modal-bg);
+}
+
 #info-modal.show {
     opacity: 1;
     visibility: visible;
 }
 
-/* Modal content transition */
 #info-modal.show > div {
     opacity: 1;
     transform: scale(1);
 }
 
 .loader {
-    border: 5px solid #374151;
-    border-top: 5px solid #ec4899;
+    border: 5px solid var(--alt-card-bg);
+    border-top: 5px solid var(--accent-pink-base);
     border-radius: 50%;
-    width: 60px; /* Larger spinner */
+    width: 60px;
     height: 60px;
     animation: spin 1s linear infinite;
     margin: 40px auto;
@@ -208,17 +281,18 @@ input[type="range"]:focus::-moz-range-thumb {
 
 /* --- Navigation Button Styles --- */
 .nav-btn {
-    background-color: #374151; /* gray-700 */
-    color: #9ca3af; /* gray-400 */
+    background-color: var(--alt-card-bg);
+    /* Explicitly set color here for higher specificity */
+    color: var(--text-secondary);
     margin: 0 4px;
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-btn.active {
-    background-color: #ec4899; /* pink-500 */
-    color: #ffffff;
-    box-shadow: 0 6px 12px -2px rgba(236, 72, 153, 0.4); /* Stronger pink shadow */
-    transform: translateY(-2px); /* Lift effect */
+    background-color: var(--accent-pink-base);
+    color: #ffffff; /* Explicitly white for active nav button text for strong contrast */
+    box-shadow: 0 6px 12px -2px var(--active-item-shadow);
+    transform: translateY(-2px);
 }
 
 /* --- Responsive YouTube iframe container (16:9 aspect ratio) --- */

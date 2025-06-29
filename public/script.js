@@ -6,8 +6,7 @@ let currentVideoIndex = 0; // Index of the currently playing video
 let isPlaying = false; // Tracks if audio music is currently playing
 let isAutoplay = true; // Controls if the next audio song plays automatically
 let activeView = 'audio'; // Tracks the active view: 'audio' or 'video'
-
-// No currentLyrics or currentLyricLineIndex as lyrics feature is removed
+let currentTheme = 'dark'; // Tracks the current theme: 'dark' or 'light' (initialized based on localStorage)
 
 // --- DOM Element References ---
 const audio = document.getElementById('audio-source'); // The HTML <audio> element
@@ -34,8 +33,6 @@ const videoPlaylistEl = document.getElementById('video-playlist');
 const youtubePlayerContainer = document.getElementById('youtube-player-container');
 const videoInfoEl = document.getElementById('video-info');
 
-// No lyricsDisplayEl as lyrics feature is removed
-
 // --- Gemini Feature Modal Elements ---
 const artistInfoBtn = document.getElementById('artist-info-btn'); // Button to get artist insights
 const infoModal = document.getElementById('info-modal'); // The modal container
@@ -43,12 +40,45 @@ const modalTitle = document.getElementById('modal-title'); // Modal title
 const modalContent = document.getElementById('modal-content'); // Modal content area
 const closeModalBtn = document.getElementById('close-modal-btn'); // Button to close the modal
 
+// --- Theme Toggle Elements ---
+const themeToggleBtn = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+
 // --- Helper Function: Format Time (e.g., 1:05) ---
 function formatTime(seconds) {
     if (isNaN(seconds) || seconds < 0) return '0:00';
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+}
+
+// --- Theme Management Functions ---
+
+/**
+ * Applies the specified theme to the document.
+ * @param {string} theme - 'dark' or 'light'.
+ */
+function applyTheme(theme) {
+    if (theme === 'light') {
+        document.body.classList.add('light-theme');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+        currentTheme = 'light';
+    } else {
+        document.body.classList.remove('light-theme');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+        currentTheme = 'dark';
+    }
+    localStorage.setItem('musicPlayerTheme', currentTheme);
+}
+
+/**
+ * Toggles the current theme between dark and light.
+ */
+function toggleTheme() {
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(newTheme);
 }
 
 // --- View Switching Functions ---
@@ -66,9 +96,9 @@ function showAudioPlayer() {
     pauseSong(); // Pause audio if switching away from video
     // Clear YouTube iframe content to stop any playing video
     youtubePlayerContainer.innerHTML = `
-        <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-gray-700 text-gray-400">
-            <i class="fab fa-youtube fa-4x"></i>
-            <span class="ml-4 text-xl">No Video Selected</span>
+        <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
+            <i class="fab fa-youtube fa-4x text-red-500"></i>
+            <span class="ml-4 text-xl text-var(--text-secondary)">No Video Selected</span>
         </div>
     `;
     videoInfoEl.textContent = 'Select a video from the playlist below.';
@@ -231,13 +261,14 @@ function buildAudioPlaylistUI() {
     audioPlaylistEl.innerHTML = ''; // Clear existing list
     playlist.forEach((song, index) => {
         const listItem = document.createElement('li');
-        listItem.classList.add('flex', 'justify-between', 'items-center', 'cursor-pointer', 'p-2', 'rounded-md', 'hover:bg-gray-700', 'transition', 'duration-200');
+        // Ensure text color classes reference CSS variables directly on inner elements for robustness
+        listItem.classList.add('flex', 'justify-between', 'items-center', 'cursor-pointer', 'p-2', 'rounded-md', 'hover:bg-var(--hover-bg)', 'transition', 'duration-200');
         listItem.innerHTML = `
             <div>
-                <div class="text-sm font-medium text-white">${song.title}</div>
-                <div class="text-xs text-gray-400">${song.artist}</div>
+                <div class="text-sm font-medium text-var(--text-primary)">${song.title}</div>
+                <div class="text-xs text-var(--text-secondary)">${song.artist}</div>
             </div>
-            <div class="text-xs text-gray-500">${song.duration ? formatTime(song.duration) : '0:00'}</div>
+            <div class="text-xs text-var(--text-secondary)">${song.duration ? formatTime(song.duration) : '0:00'}</div>
         `;
         listItem.addEventListener('click', () => {
             currentSongIndex = index;
@@ -276,9 +307,9 @@ async function fetchVideoPlaylist() {
         } else {
             videoInfoEl.textContent = 'No videos in playlist.';
             youtubePlayerContainer.innerHTML = `
-                <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-gray-700 text-gray-400">
-                    <i class="fab fa-youtube fa-4x"></i>
-                    <span class="ml-4 text-xl">No Video Available</span>
+                <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
+                    <i class="fab fa-youtube fa-4x text-red-500"></i>
+                    <span class="ml-4 text-xl text-var(--text-secondary)">No Video Selected</span>
                 </div>
             `;
         }
@@ -286,9 +317,9 @@ async function fetchVideoPlaylist() {
         console.error('Failed to fetch video playlist:', error);
         videoInfoEl.textContent = 'Error loading video playlist.';
         youtubePlayerContainer.innerHTML = `
-            <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-gray-700 text-red-400">
-                <i class="fas fa-exclamation-triangle fa-4x"></i>
-                <span class="ml-4 text-xl">Error Loading Videos</span>
+            <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
+                <i class="fas fa-exclamation-triangle fa-4x text-red-400"></i>
+                <span class="ml-4 text-xl text-red-400">Error Loading Videos</span>
             </div>
         `;
     }
@@ -303,9 +334,9 @@ function loadVideo(index) {
         console.warn('Attempted to load an invalid video index or empty video playlist.');
         videoInfoEl.textContent = 'No video selected or available.';
         youtubePlayerContainer.innerHTML = `
-            <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-gray-700 text-gray-400">
-                <i class="fab fa-youtube fa-4x"></i>
-                <span class="ml-4 text-xl">No Video Selected</span>
+            <div class="youtube-placeholder w-full h-full flex items-center justify-center bg-var(--alt-card-bg)">
+                <i class="fab fa-youtube fa-4x text-red-500"></i>
+                <span class="ml-4 text-xl text-var(--text-secondary)">No Video Selected</span>
             </div>
         `;
         return;
@@ -332,13 +363,14 @@ function buildVideoPlaylistUI() {
     videoPlaylistEl.innerHTML = '';
     videoPlaylist.forEach((video, index) => {
         const listItem = document.createElement('li');
-        listItem.classList.add('flex', 'justify-between', 'items-center', 'cursor-pointer', 'p-2', 'rounded-md', 'hover:bg-gray-700', 'transition', 'duration-200');
+        // Ensure text color classes reference CSS variables directly on inner elements for robustness
+        listItem.classList.add('flex', 'justify-between', 'items-center', 'cursor-pointer', 'p-2', 'rounded-md', 'hover:bg-var(--hover-bg)', 'transition', 'duration-200');
         listItem.innerHTML = `
             <div>
-                <div class="text-sm font-medium text-white">${video.title}</div>
-                <div class="text-xs text-gray-400">${video.artist}</div>
+                <div class="text-sm font-medium text-var(--text-primary)">${video.title}</div>
+                <div class="text-xs text-var(--text-secondary)">${video.artist}</div>
             </div>
-            ${video.duration ? `<div class="text-xs text-gray-500">${formatTime(video.duration)}</div>` : ''}
+            ${video.duration ? `<div class="text-xs text-var(--text-secondary)">${formatTime(video.duration)}</div>` : ''}
         `;
         listItem.addEventListener('click', () => {
             loadVideo(index);
@@ -364,7 +396,7 @@ function highlightVideoPlaylist(index) {
 function showModalWithLoading() {
     infoModal.classList.remove('invisible', 'opacity-0'); // Make visible and opaque
     infoModal.classList.add('show'); // Trigger CSS transition for content
-    modalContent.innerHTML = '<div class="loader"></div><p class="text-center text-gray-400 mt-4">Getting insights...</p>';
+    modalContent.innerHTML = '<div class="loader"></div><p class="text-center text-var(--text-secondary) mt-4">Getting insights...</p>';
     modalTitle.textContent = 'Artist Insights';
 }
 
@@ -408,7 +440,7 @@ async function getArtistInsights() {
 
         const data = await response.json();
         if (data.text) {
-            modalContent.innerHTML = `<p>${data.text.replace(/\n/g, '<br>')}</p>`;
+            modalContent.innerHTML = `<p class="text-var(--text-primary)">${data.text.replace(/\n/g, '<br>')}</p>`;
         } else {
             modalContent.innerHTML = '<p class="text-red-400">Failed to get artist insights. Please try again.</p>';
         }
@@ -419,6 +451,9 @@ async function getArtistInsights() {
 }
 
 // --- Event Listeners ---
+
+// Theme toggle button
+themeToggleBtn.addEventListener('click', toggleTheme);
 
 // Navigation buttons
 audioNavBtn.addEventListener('click', showAudioPlayer);
@@ -452,6 +487,10 @@ infoModal.addEventListener('click', (e) => {
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Apply saved theme on load, default to dark
+    const savedTheme = localStorage.getItem('musicPlayerTheme') || 'dark';
+    applyTheme(savedTheme);
+
     fetchAudioPlaylist(); // Fetch the audio playlist initially
     audio.volume = volumeSlider.value; // Set initial volume from slider
     // Initialize the custom CSS property for the volume slider fill

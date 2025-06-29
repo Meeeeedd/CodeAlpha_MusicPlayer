@@ -56,30 +56,30 @@ const audioPlaylist = [
 const videoPlaylist = [
     {
         id: 'v1',
-        title: 'Blinding Lights',
-        artist: 'The Weeknd',
-        youtubeId: '4NRXx6U8ABQ', // Example ID, replace with actual
+        title: 'Maktoub',
+        artist: 'A.L.A',
+        youtubeId: 'https://www.youtube.com/watch?v=Og_bA70eKvk', // Example ID, replace with actual
         duration: 230
     },
     {
         id: 'v2',
-        title: 'Gods Plan',
-        artist: 'Drake',
-        youtubeId: 'xpVfcZ0ZcFM',
-        duration: 198
+        title: '7 Snin',
+        artist: 'Samara',
+        youtubeId: 'https://www.youtube.com/watch?v=NvCmx1KjLc8&list=RDNvCmx1KjLc8&index=1',
+        duration: 300
     },
     {
         id: 'v3',
-        title: 'Shape of You',
-        artist: 'Ed Sheeran',
-        youtubeId: 'JGwWNGJdvx8',
+        title: 'Dernier But',
+        artist: 'Samara',
+        youtubeId: 'https://www.youtube.com/watch?v=v7QJlY_WRBs&list=RDNvCmx1KjLc8&index=5',
         duration: 233
     },
     {
         id: 'v4',
         title: 'Uptown Funk',
-        artist: 'Mark Ronson ft. Bruno Mars',
-        youtubeId: 'OPf0YbXqDm0',
+        artist: 'Samara',
+        youtubeId: 'https://www.youtube.com/watch?v=cq5EnKIIpxk&list=RDNvCmx1KjLc8&index=7',
         duration: 271
     },
     {
